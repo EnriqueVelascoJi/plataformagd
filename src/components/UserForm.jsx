@@ -40,7 +40,9 @@ import NavBar from './NavBar';
 import SideBar from './SideBar';
 import { Typography } from '@mui/material';
 
-
+//Auth
+import { createPassword} from '../helpers/helpers.js'
+import { handleSignUp } from '../auth/auth';
 
 
 //Page Style
@@ -350,6 +352,8 @@ const profiles = [
 
 
 
+
+
 export default function UserForm({isNew}) {
 
   //Local variables
@@ -388,29 +392,41 @@ export default function UserForm({isNew}) {
     
 
     //Local functions
+    // const newUser = async () => {
+
+    //   const url = path
+    //   const body = user
+    //   try {
+       
+    //       const response = await fetch(url, {
+    //         method: "POST", 
+    //         headers: {
+    //           "Content-Type": "application/json",
+    //         },
+    //         body: JSON.stringify(body),
+    //         mode: 'cors'
+          
+    //       });
+    //       const result = await response.json();
+  
+    //       console.log(result.data)
+        
+    // } catch (error) {
+    //     console.log(error)
+    // }
+    // navigate(0)
+    // }
     const newUser = async () => {
 
       const url = path
-      const body = user
-      try {
-       
-          const response = await fetch(url, {
-            method: "POST", 
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(body),
-            mode: 'cors'
-          
-          });
-          const result = await response.json();
-  
-          console.log(result.data)
-        
-    } catch (error) {
-        console.log(error)
-    }
-    navigate(0)
+      const body = {
+        username: user.email,
+        email: user.email,
+        password: createPassword()
+      }
+      console.log(body)
+      const response = await handleSignUp(body)
+      console.log(response)
     }
     const editUser = () => {
 

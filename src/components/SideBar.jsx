@@ -35,6 +35,9 @@ import logo from '../../src/assets/imgs/logoblack.png'
 //Redux
 import { useSelector } from 'react-redux';
 
+//Auth
+import { handleSignOut } from '../auth/auth';
+
 
 
 
@@ -221,9 +224,15 @@ export default function SideBar() {
         console.log(error)
     }
   }
-  const logout = () => {
+  const logout = async () => {
     localStorage.clear()
-    navigate('/')
+    try {
+      const session = await handleSignOut()
+      console.log(session)
+      navigate('/')
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   useEffect(() => {

@@ -1,3 +1,16 @@
+const createPassword = () => {
+    const chars = "0123456789abcdefghijklmnopqrstuvwxyz!@#$%^&*()ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const passwordLength = 8;
+    let password = "";
+
+ 
+    for (let i = 0; i <= passwordLength; i++) {
+        let randomNumber = Math.floor(Math.random() * chars.length);
+        password += chars.substring(randomNumber, randomNumber +1);
+    }
+    return password
+
+}
 const validateEmail = (email) => {
 
     return String(email)
@@ -21,6 +34,7 @@ const validateForm = (user) =>{
     return isEmailValid && isPasswordValid
 }
 
-export default {
-    validateForm
+export{
+    validateForm,
+    createPassword
 }

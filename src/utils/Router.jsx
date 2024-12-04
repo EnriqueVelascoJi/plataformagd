@@ -2,6 +2,7 @@ import { Route, Routes } from 'react-router-dom';
 
 // Pages
 import Login from '../pages/Login';
+import Verification from '../pages/Verification';
 import Home from '../pages/Home';
 import Users from '../pages/Users'
 import Projects from '../pages/Projects';
@@ -21,6 +22,7 @@ const Router = () => {
         <Routes>
           <Route path='/' element={<Login />} />
           <Route path='/login' element={<Login />} />
+          <Route path='/verificacion' element={<Verification />} />
           <Route path='/home' element={<Home/> } />
           <Route path='/usuarios' element={<Users/> } /> 
           <Route path='/proyectos' element={<Projects/> } /> 

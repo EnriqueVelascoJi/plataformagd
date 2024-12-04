@@ -32,7 +32,9 @@ import { setUserInformation } from '../features/userSlice';
 import Swal from 'sweetalert2'
 
 //Auth
-import { handleSignIn } from '../auth/auth';
+import { signUp } from "aws-amplify/auth"
+import { handleSignUpConfirmation, handleAutoSignIn } from '../auth/auth';
+
 
 //Page Styles
 const styles = {
@@ -89,7 +91,7 @@ const dummyUser = {
   perfil: 0
 }
 
-export default function Login() {
+export default function Verification() {
 
     //Local variables
     const path = 'https://backmsn.msnserviciosaereos.com.mx/apiv2/usuariogd'
@@ -103,7 +105,7 @@ export default function Login() {
     //State
     const [user, setUser] = useState({
       email: '',
-      password: '',
+      code: '',
     })
     const [open, setOpen] = useState(false)
     
@@ -124,136 +126,28 @@ export default function Login() {
     const clear = () => {
       setUser({
         email: '',
-        password: ''
+        code: ''
       })
     }
     
-    // const submit = async() => {
-
-    //   const url = `${path}/login` 
-
-    //   console.log(url)
-
-    //   const validation = validateForm(user)
-    //   if (!validation) return
-
-    //   console.log('paso')
-
-    //   try {
-       
-    //     const response = await fetch(url, {
-    //       method: "POST", 
-    //       headers: {
-    //         "Content-Type": "application/json",
-    //       },
-    //       body: JSON.stringify(user),
-    //       mode: 'cors'
-    //     });
-    //     const result = await response.json();
-    //     const session = result.data;
-
-        
-        
-    //     if(Object.keys(session).length > 0) {
-
-    //         const {
-    //         id,
-    //         name,
-    //         firstsurname,
-    //         secondsurname,
-    //         email,
-    //         domain,
-    //         subdomain,
-    //         area,
-    //         profile,
-    //         isActive
-    //         } = session
-          
-    //       localStorage.setItem("userId", id);
-    //       Swal.fire({
-    //         position: 'top-end',
-    //         icon: 'success',
-    //         title: '¡Bienvenido!',
-    //         showConfirmButton: false,
-    //         timer: 2500
-    //       })     
-    //       navigate('/home')
-    //       dispatch(setUserInformation({
-    //         name,
-    //         firstName: firstsurname,
-    //         secondSurname: secondsurname,
-    //         email,
-    //         domain,
-    //         subdomain,
-    //         area,
-    //         profile,
-    //         isActive
-    //       }))
-    //     } else
-    //     {
-    //      Swal.fire({
-    //        position: 'top-end',
-    //        icon: 'error',
-    //        title: 'Error al ingresar',
-    //        showConfirmButton: false,
-    //        timer: 1500
-    //      })
-    //     }
-        
-    //   }catch (error) {
-    //     Swal.fire({
-    //       position: 'top-end',
-    //       icon: 'error',
-    //       title: 'Error al ingresar',
-    //       showConfirmButton: false,
-    //       timer: 1500
-    //     })
-        
-    //   }
-
-    // }
     const submit = async() => {
-
-      const url = `${path}/login`
-      const validation = validateForm(user)
-      if (!validation) return
+      
       const payload = {
         username: user.email,
-        password: user.password
+        confirmationCode: user.code
       }
-      try {
-        const login = await handleSignIn(payload)
-        const {isSignedIn} = login
-        if(isSignedIn) {
-          Swal.fire({
-          position: 'top-end',
-          icon: 'success',
-          title: '¡Bienvenido!',
-          showConfirmButton: false,
-          timer: 2500
-        })     
-          navigate('/home')
-        } else  {
-          Swal.fire({
-            position: 'top-end',
-            icon: 'error',
-            title: 'Error al ingresar',
-            showConfirmButton: false,
-            timer: 1500
-          })
-        }
+      const confirmation = await handleSignUpConfirmation(payload)
+      const { isSignUpComplete } = confirmation
 
-      } catch (error) {
-        console.log(error)
+      if(isSignUpComplete) {
         Swal.fire({
           position: 'top-end',
-          icon: 'error',
-          title: 'Error al ingresar',
+          icon: 'success',
+          title: '¡Ya estás registrado, ahora puedes entrar al sistema!',
           showConfirmButton: false,
-          timer: 1500
-        })
+          timer: 2500
+        })  
       }
-
       
 
     }
@@ -280,7 +174,7 @@ export default function Login() {
           <div style={styles.formRigth}>
               <Grid container   justifyContent={'center'} alignItems={'baseline'} sx={{backgroundColor: 'rgba(69,46,112,0.5)', width: '80%', borderRadius: 3, p:10}}>
               <form style={styles.formText} >
-              <h1 style={styles.formTitle}>Inicia sesión</h1>
+              <h1 style={styles.formTitle}>Verifica tu email</h1>
                     <TextField 
                         label="Email"
                         onChange={handleChange}
@@ -311,13 +205,13 @@ export default function Login() {
                     />
                     <TextField
                     color='#00'
-                    label="Password"
+                    label="Código"
                     onChange={handleChange}
                     required
                     variant="outlined"
-                    name='password'
-                    type="password"
-                    value={user.password}
+                    name='code'
+                    type="text"
+                    value={user.code}
                     fullWidth
                     sx={{
                         mb: 3,
@@ -338,14 +232,9 @@ export default function Login() {
                       }}
                   />
                   <Grid container item size={12}>
-                    <Grid item size={6}>
-                      <Button style={styles.button} onClick={submit} fullWidth>Entrar</Button>
+                    <Grid item size={8}>
+                      <Button style={styles.button} onClick={submit} fullWidth>Verificar</Button>
                     </Grid>
-                    <Grid item size={6} textAlign={'end'} >
-                      <Button variant="text" sx={{color: '#e7e6e6', textTransform: 'none', textDecoration: 'underline'}} onClick={handleOpen}>Solicitud de registro</Button>
-                    </Grid>
-                    
-
                   </Grid>
               
               </form>
