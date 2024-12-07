@@ -13,7 +13,7 @@ import IconButton from '@mui/material/IconButton';
 //React components
 import Dominios from './Dominios';
 import Sites from './Sites'
-import Usuario from './Usuario';
+import User from './User';
 import UserForm from './UserForm';
 import ProjectInformation from './ProjectInformation';
 
@@ -25,7 +25,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function Modal({title, id, open, setOpen, size}) {
+export default function Modal({title, id, open, setOpen, size, body}) {
 
 
     //Handles
@@ -69,7 +69,9 @@ export default function Modal({title, id, open, setOpen, size}) {
           }
           {
             id == 3 && (
-              <Usuario/>
+              <User
+                user={body}
+              />
             )
           }
           {
@@ -83,6 +85,7 @@ export default function Modal({title, id, open, setOpen, size}) {
             id === 5 && (
               <UserForm 
                 isNew={false}
+                user={body}
               />
             )
           }

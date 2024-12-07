@@ -25,6 +25,9 @@ import SideBar from './SideBar';
 //Router
 import { useNavigate } from 'react-router-dom';
 
+//API
+import { get } from 'aws-amplify/api';
+
 
 
 
@@ -188,12 +191,13 @@ export default function Navbar() {
   const getNotifications = async() => {
     const url = notificationPath
       try {
-          const response = await fetch(url);
-          const result = await response.json();
-
-          const normalData = result.data;
-          console.log('notifications', normalData)
-          setNotifications(normalData);
+        const restOperation = get({ 
+          apiName: 'api31a79f36',
+          path: `/helper/notifications/${userId}` 
+        });
+        const { body } = await restOperation.response;
+        const { data } = await body.json();
+          setNotifications(data);
 
       } catch (error) {
           console.log(error)

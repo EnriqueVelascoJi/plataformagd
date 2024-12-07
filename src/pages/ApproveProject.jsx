@@ -46,13 +46,13 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateProjectForm } from '../features/projectSlice';
 
-
-//Page Style
-
 //Alerts
 import Swal from 'sweetalert2'
 
+//API
+import { get, put } from 'aws-amplify/api';
 
+//Page Style
 const styles = {
     title: {
         fontWeight: '300',
@@ -502,91 +502,29 @@ export default function ApproveProject() {
 
         
     };
-
-    const totalSteps = () => {
-        return steps.length;
-      };
-    
-    const completedSteps = () => {
-    return Object.keys(completed).length;
-    };
-    
-    const isLastStep = () => {
-    return activeStep === totalSteps() - 1;
-    };
-    
-    const allStepsCompleted = () => {
-    return completedSteps() === totalSteps();
-    };
-    const handleStep = (step) => () => {
-    setActiveStep(step);
-    };
-
-    const handleNext = () => {
-        const newActiveStep =
-            isLastStep() && !allStepsCompleted()
-        ? // It's the last step, but not all steps have been completed,
-          // find the first step that has been completed
-          steps.findIndex((step, i) => !(i in completed))
-        : activeStep + 1;
-        setActiveStep(newActiveStep);
-
-    };
-
-    const handleBack = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep - 1);
-    };
-    const handleAdd = () => {
-
-        const newId = newProject.participants.length + 1
-        console.log(newId)
-        const newParticipant = {
-            idParticipant: newId,
-                name: '',
-               surname: '',
-               email: '',
-               position: '',
-               area: 0,
-               rol: 0       
-        }
-
-
-        const newParticipants = newProject.participants
-        newParticipants.push(newParticipant)
-        console.log(newParticipants)
-        const newProjectAux = newProject
-        newProjectAux.participants = newParticipants
-
-        setNewProject({...newProjectAux})
-
-    }
-
     const handleReject = async() => {
-        const {idnotification, idassociate, nameassociate, isanswered, isactive, idusersend, iduserreceiver} = notification
-
-        let url = notificationPath
-        let body = {
-            idNotification: idnotification,
-            idProject: idassociate,
-            idUserSend: iduserreceiver,
-            idUserReceiver: idusersend,
-            flag: 'rejected',
-            rejected: rejectReason
-        } 
+       
         try {
-        
-            const response = await fetch(url, {
-                method: "PATCH", 
-                headers: {
-                "Content-Type": "application/json",
-                },
-                body: JSON.stringify(body),
-                mode: 'cors'
-            
-            });
-            const result = await response.json();
+            const {idnotification, idassociate, nameassociate, isanswered, isactive, idusersend, iduserreceiver} = notification
+            const bodyReject = {
+                idNotification: idnotification,
+                idProject: idassociate,
+                idUserSend: iduserreceiver,
+                idUserReceiver: idusersend,
+                flag: 'rejected',
+                rejected: rejectReason
+            } 
+            const restOperation = put({
+                apiName: 'api31a79f36',
+                path: '/project/helper/status' ,
+                options: {
+                  body: bodyReject
+                }
+              });
+          
+            const { body } = await restOperation.response;
+            const { data } = await body.json();
     
-            console.log(result.data)
             Swal.fire({
                 position: "top-end",
                 icon: "success",
@@ -603,31 +541,28 @@ export default function ApproveProject() {
         }
     }
     const handleAccept = async() => {
-        const {idnotification, idassociate, nameassociate, isanswered, isactive, idusersend, iduserreceiver} = notification
-
-        let url = notificationPath
-        let body = {
-            idNotification: idnotification,
-            idProject: idassociate,
-            idUserSend: iduserreceiver,
-            idUserReceiver: idusersend,
-            flag: 'accepted'
-        }
-        console.log(body)
-        try {
         
-            const response = await fetch(url, {
-                method: "PATCH", 
-                headers: {
-                "Content-Type": "application/json",
-                },
-                body: JSON.stringify(body),
-                mode: 'cors'
-            
-            });
-            const result = await response.json();
+        try {
+            const {idnotification, idassociate, nameassociate, isanswered, isactive, idusersend, iduserreceiver} = notification
+            const bodyApprove = {
+                idNotification: idnotification,
+                idProject: idassociate,
+                idUserSend: iduserreceiver,
+                idUserReceiver: idusersend,
+                flag: 'accepted'
+            }
+            const restOperation = put({
+                apiName: 'api31a79f36',
+                path: '/project/helper/status' ,
+                options: {
+                  body: bodyApprove
+                }
+              });
+          
+            const { body } = await restOperation.response;
+            const { data } = await body.json();
     
-            console.log(result.data)
+            console.log(data)
             Swal.fire({
                 position: "top-end",
                 icon: "success",
@@ -643,66 +578,17 @@ export default function ApproveProject() {
         }
         
     }
-    
-    const handleDelete = (id) => {
-
-        const newParticipants = newProject.participants.filter( participant => participant.idParticipant !== id)
-        const newProjectAux = newProject
-        newProjectAux.participants = newParticipants
-        
-        setNewProject({...newProjectAux})
-
-    }
-    const handleSubmit = async() => {
-
-        const url = projectPath
-        const {context} = newProject
-        context['userId'] = userId
-        try {
-        
-            const response = await fetch(url, {
-                method: "POST", 
-                headers: {
-                "Content-Type": "application/json",
-                },
-                body: JSON.stringify(newProject),
-                mode: 'cors'
-            
-            });
-            const result = await response.json();
-    
-            console.log(result.data)
-
-        
-            Swal.fire({
-            position: "top-end",
-            icon: "success",
-            title: "Solicitud enviada a la oficina de GD",
-            showConfirmButton: false,
-            timer: 2500,
-            
-          });
-          dispatch(updateProjectForm(newProject))
-          navigate('/proyectos')
-
-        } catch (error) {
-            console.log(error)
-        }
-        
-        
-    }
-    
     const getProject = async() => {
 
-    const url = projectPath
-    console.log(url)
     try {
-        const response = await fetch(url);
-        const result = await response.json();
+        const restOperation = get({ 
+            apiName: 'api31a79f36',
+            path: `/project/${id}` 
+          });
+          const { body } = await restOperation.response;
+          const { data } = await body.json();
 
-        const normalData = result.data;
-
-        const {projectInformation, participants} = normalData
+        const {projectInformation, participants} = data
         const informationArray = projectInformation[0] 
         const participantsArray = participants.map(participant => ({
             idParticipant: participant.id,

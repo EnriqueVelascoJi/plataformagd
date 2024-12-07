@@ -51,6 +51,9 @@ import { useDispatch } from 'react-redux';
 
 import { setNotificationInformation } from '../features/notificationSlice';
 
+//API
+import { get, put } from 'aws-amplify/api';
+
 
 //Pages styles
 const styles = {
@@ -125,32 +128,28 @@ export default function Notifications({open, setOpen, notifications}) {
 
   //Functions
   const updateNotification = async(notification) => {
-    const {idnotification, idassociate, nameassociate, isanswered, isactive, idusersend, iduserreceiver} = notification
     
-    let url = notificationPath
-    let body = {
-      idNotification: idnotification,
-      idProject: idassociate,
-      idUserSend: iduserreceiver,
-      idUserReceiver: idusersend,
-      flag: 'view'
-  }
-  console.log(body)
     try {
-    
-        const response = await fetch(url, {
-            method: "PATCH", 
-            headers: {
-            "Content-Type": "application/json",
-            },
-            body: JSON.stringify(body),
-            mode: 'cors'
-        
-        });
-        const result = await response.json();
+      const {idnotification, idassociate, nameassociate, isanswered, isactive, idusersend, iduserreceiver} = notification
+      const bodyNotification = {
+        idNotification: idnotification,
+        idProject: idassociate,
+        idUserSend: iduserreceiver,
+        idUserReceiver: idusersend,
+        flag: 'view'
+    }
+      const restOperation = put({
+        apiName: 'api31a79f36',
+        path: '/project/helper/status' ,
+        options: {
+          body: bodyNotification
+        }
+      });
 
-        console.log(result.data)
+      const { body } = await restOperation.response;
+      const {data} = await body.json();
 
+    console.log(data)
 
     } catch (error) {
         console.log(error)
@@ -186,21 +185,14 @@ const viewNotification = async (notification) => {
   dispatch(setNotificationInformation(notification))
   navigate(path)
 }
-  const respondNotification = (notificationToApprove) => {
+const approveNotification = async () => {
 
-    console.log(notificationToApprove)
-    //handleClickOpenResponse()
+  const {id, idassociate, nameassociate, isanswered, isactive, idusersend, iduserreceiver} = notification
 
-   // setNotification(notificationToApprove)
-  }
-  const approveNotification = async () => {
+  console.log(idassociate)
 
-    const {id, idassociate, nameassociate, isanswered, isactive, idusersend, iduserreceiver} = notification
-
-    console.log(idassociate)
-
-    await updateNotification(id, idassociate, nameassociate, isanswered, isactive, idusersend, iduserreceiver)
-  }
+  await updateNotification(id, idassociate, nameassociate, isanswered, isactive, idusersend, iduserreceiver)
+}
 
 
   return (

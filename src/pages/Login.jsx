@@ -128,123 +128,69 @@ export default function Login() {
       })
     }
     
-    // const submit = async() => {
-
-    //   const url = `${path}/login` 
-
-    //   console.log(url)
-
-    //   const validation = validateForm(user)
-    //   if (!validation) return
-
-    //   console.log('paso')
-
-    //   try {
-       
-    //     const response = await fetch(url, {
-    //       method: "POST", 
-    //       headers: {
-    //         "Content-Type": "application/json",
-    //       },
-    //       body: JSON.stringify(user),
-    //       mode: 'cors'
-    //     });
-    //     const result = await response.json();
-    //     const session = result.data;
-
-        
-        
-    //     if(Object.keys(session).length > 0) {
-
-    //         const {
-    //         id,
-    //         name,
-    //         firstsurname,
-    //         secondsurname,
-    //         email,
-    //         domain,
-    //         subdomain,
-    //         area,
-    //         profile,
-    //         isActive
-    //         } = session
-          
-    //       localStorage.setItem("userId", id);
-    //       Swal.fire({
-    //         position: 'top-end',
-    //         icon: 'success',
-    //         title: '¡Bienvenido!',
-    //         showConfirmButton: false,
-    //         timer: 2500
-    //       })     
-    //       navigate('/home')
-    //       dispatch(setUserInformation({
-    //         name,
-    //         firstName: firstsurname,
-    //         secondSurname: secondsurname,
-    //         email,
-    //         domain,
-    //         subdomain,
-    //         area,
-    //         profile,
-    //         isActive
-    //       }))
-    //     } else
-    //     {
-    //      Swal.fire({
-    //        position: 'top-end',
-    //        icon: 'error',
-    //        title: 'Error al ingresar',
-    //        showConfirmButton: false,
-    //        timer: 1500
-    //      })
-    //     }
-        
-    //   }catch (error) {
-    //     Swal.fire({
-    //       position: 'top-end',
-    //       icon: 'error',
-    //       title: 'Error al ingresar',
-    //       showConfirmButton: false,
-    //       timer: 1500
-    //     })
-        
-    //   }
-
-    // }
     const submit = async() => {
 
-      const url = `${path}/login`
+      const url = `${path}/login` 
+
+      console.log(url)
+
       const validation = validateForm(user)
       if (!validation) return
-      const payload = {
-        username: user.email,
-        password: user.password
-      }
+
+      console.log('paso')
+
       try {
-        const login = await handleSignIn(payload)
-        const {isSignedIn} = login
-        if(isSignedIn) {
-          Swal.fire({
-          position: 'top-end',
-          icon: 'success',
-          title: '¡Bienvenido!',
-          showConfirmButton: false,
-          timer: 2500
-        })     
-          navigate('/home')
-        } else  {
+       
+        const response = await fetch(url, {
+          method: "POST", 
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(user),
+          mode: 'cors'
+        });
+        const result = await response.json();
+        const session = result.data;
+
+        
+        
+        if(Object.keys(session).length > 0) {
+
+            const {
+            id,
+            name,
+            firstsurname,
+            secondsurname,
+            email,
+            domain,
+            subdomain,
+            area,
+            profile,
+            isActive
+            } = session
+          
+          localStorage.setItem("userId", id);
           Swal.fire({
             position: 'top-end',
-            icon: 'error',
-            title: 'Error al ingresar',
+            icon: 'success',
+            title: '¡Bienvenido!',
             showConfirmButton: false,
-            timer: 1500
-          })
-        }
-
-      } catch (error) {
-        console.log(error)
+            timer: 2500
+          })     
+          navigate('/home')
+          dispatch(setUserInformation({
+            name,
+            firstName: firstsurname,
+            secondSurname: secondsurname,
+            email,
+            domain,
+            subdomain,
+            area,
+            profile,
+            isActive
+          }))
+        } else
+        {
         Swal.fire({
           position: 'top-end',
           icon: 'error',
@@ -252,11 +198,65 @@ export default function Login() {
           showConfirmButton: false,
           timer: 1500
         })
+        }
+        
+      }catch (error) {
+        Swal.fire({
+          position: 'top-end',
+          icon: 'error',
+          title: 'Error al ingresar',
+          showConfirmButton: false,
+          timer: 1500
+        })
+        
       }
+
+    }
+    // const submit = async() => {
+
+    //   const url = `${path}/login`
+    //   const validation = validateForm(user)
+    //   if (!validation) return
+    //   const payload = {
+    //     username: user.email,
+    //     password: user.password
+    //   }
+    //   try {
+    //     const login = await handleSignIn(payload)
+    //     const {isSignedIn} = login
+    //     if(isSignedIn) {
+    //       Swal.fire({
+    //       position: 'top-end',
+    //       icon: 'success',
+    //       title: '¡Bienvenido!',
+    //       showConfirmButton: false,
+    //       timer: 2500
+    //     })     
+    //       navigate('/home')
+    //     } else  {
+    //       Swal.fire({
+    //         position: 'top-end',
+    //         icon: 'error',
+    //         title: 'Error al ingresar',
+    //         showConfirmButton: false,
+    //         timer: 1500
+    //       })
+    //     }
+
+    //   } catch (error) {
+    //     console.log(error)
+    //     Swal.fire({
+    //       position: 'top-end',
+    //       icon: 'error',
+    //       title: 'Error al ingresar',
+    //       showConfirmButton: false,
+    //       timer: 1500
+    //     })
+    //   }
 
       
 
-    }
+    // }
 
     
 

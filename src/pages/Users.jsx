@@ -48,6 +48,10 @@ import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css"; 
 import { AG_GRID_LOCALE_ES } from '@ag-grid-community/locale';
 
+//API
+import { get } from 'aws-amplify/api';
+
+
 
 //Page Style
 const styles = {
@@ -89,28 +93,30 @@ const options = [
 
 export default function Users() {
 
-  //Local variables 
-  const path = 'https://backmsn.msnserviciosaereos.com.mx/apiv2/usuariogd'
-
     //State 
     const [open, setOpen] = useState(false)
     const [modalInfo, setModalInfo] = useState({})
     const [size, setSize] = useState('md')
     const [users, setUsers] = useState([])
 
-    const navigate = useNavigate()
 
     //handles
-    const handleOpen = (id) => {
+    const getUserContext = async (idMode, idUser)=> {
+      console.log(idMode, idUser)
+      const user = await getUser(idUser)
+      handleOpen(idMode, user)
+    
+    }
+    const handleOpen = (id, user) => {
       if(id === 3) 
-        setModalInfo(options[0])
+        setModalInfo({...options[0], user})
         
       if(id === 4) 
-        setModalInfo(options[1])
+        setModalInfo({...options[1], user})
         
 
       if(id === 5) 
-        setModalInfo(options[2])
+        setModalInfo({...options[2], user})
         
 
 
@@ -140,12 +146,14 @@ export default function Users() {
     
     //Local componnets
     const CustomButtonComponent = (props) => {
+      const {data: { id }} = props
+      console.log(id) 
       return (
         <Stack direction="row" spacing={2} justifyContent={'space-evenly'}>
-          <IconButton aria-label="ver" onClick={() => handleOpen(3)}>
+          <IconButton aria-label="ver" onClick={() => getUserContext(3, id)}>
             <VisibilityIcon sx={{ color: '#53994e'}} />
           </IconButton>
-          <IconButton aria-label="editar" onClick={() => handleOpen(5)}>
+          <IconButton aria-label="editar" onClick={() => getUserContext(5, id)}>
             <EditIcon sx={{ color: '#f5e287'}}/>
           </IconButton>
           <IconButton aria-label="delete" onClick={handleAlert}>
@@ -201,32 +209,37 @@ export default function Users() {
           filter: true
         }
     ];
-   
-    const data = [
-    {nombre: 'Enrique', apellidos: 'Velasco Jimenez', email: 'email@gmail.com', dominio: 'Comercial', subdominio: 'Oferta', perfil: 'Admin', rol: 'Admin', area: 'Dirección comercial', fecha: '24/10/2024', estatus: 'Activo'},
-    {nombre: 'Enrique2', apellidos: 'Velasco Jimenez', email: 'email@gmail.com', dominio: 'Comercial', subdominio: 'Oferta', perfil: 'Admin', rol: 'Admin', area: 'Dirección comercial', fecha: '24/10/2024', estatus: 'Activo'},
-    {nombre: 'Enrique3', apellidos: 'Velasco Jimenez', email: 'email@gmail.com', dominio: 'Comercial', subdominio: 'Oferta', perfil: 'Admin', rol: 'Admin', area: 'Dirección comercial', fecha: '24/10/2024', estatus: 'Activo'},
-
-    ];
-
 
     //Functions
     const getUsers = async() => {
-
-      const url = path
       try {
-          const response = await fetch(url);
-          const result = await response.json();
-
-          const normalData = result.data;
-          setUsers(normalData);
-
-      } catch (error) {
-          console.log(error)
+        const restOperation = get({ 
+          apiName: 'api31a79f36',
+          path: '/user' 
+        });
+        const { body } = await restOperation.response;
+        const { data } = await body.json();
+        
+        setUsers(data)
+      } catch (e) {
+        console.log('GET call failed: ', JSON.parse(e.response.body));
       }
     }
-
-
+    const getUser = async(id) => {
+      try {
+        const restOperation = get({ 
+          apiName: 'api31a79f36',
+          path: `/user/${id}` 
+        });
+        const { body } = await restOperation.response;
+        const { data } = await body.json();
+        
+        return data
+      } catch (e) {
+        console.log('GET call failed: ', JSON.parse(e.response.body));
+      }
+    }
+    
 
     useEffect(() => {
       getUsers()
@@ -246,6 +259,7 @@ export default function Users() {
       open={open}
       setOpen={setOpen}
       size={size}
+      body={modalInfo.user}
     />
 
     

@@ -87,10 +87,10 @@ const Root = styled('div')(({ theme }) => ({
 
 
 
-export default function Usuario() {
+export default function User({user}) {
 
     //State 
-
+    console.log(user)
 
     //Handles
     const handleClick = () => {
@@ -129,10 +129,10 @@ export default function Usuario() {
               </Root>
               <Grid item container size={12} sx={{mt: 3}}>
                 <Grid item size={4} sx={{ fontWeight: 'bold'}}>
-                  Nombre:
+                  
                 </Grid>
                 <Grid item size={6}>
-                  Enrique Velasco Jimenez
+                  {user.name} {user.firstsurname} {user.secondsurname}
                 </Grid>
               </Grid>
               <Grid item size={12}>
@@ -142,7 +142,7 @@ export default function Usuario() {
                   Email: 
                 </Grid>
                 <Grid item size={6}>
-                enrique.velasco@ext.gendra.dev
+                {user.email}
                 </Grid>
               </Grid>
               <Grid item container size={12}>
@@ -150,7 +150,7 @@ export default function Usuario() {
                   Perfil:
                 </Grid>
                 <Grid item size={6}>
-                  Data Specialist
+                  {user.profile}
                 </Grid>
               </Grid>
             </Grid>

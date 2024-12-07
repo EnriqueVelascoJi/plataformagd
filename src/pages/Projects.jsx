@@ -56,6 +56,9 @@ import { AG_GRID_LOCALE_ES } from '@ag-grid-community/locale';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateProjectForm, changeProcessId, changeVisibleMode, changeGloabalStatus, changeIsSend } from '../features/projectSlice';
 
+//API
+import { get } from 'aws-amplify/api';
+
 //Page Style
 const styles = {
     title: {
@@ -223,19 +226,21 @@ export default function Projects() {
 
     ];
 
+   
     const getProjects = async() => {
 
       const url = path
       try {
-          const response = await fetch(url);
-          const result = await response.json();
-
-          const normalData = result.data;
-          console.log(normalData)
-          setProjects(normalData);
-
-      } catch (error) {
-          console.log(error)
+        const restOperation = get({ 
+          apiName: 'api31a79f36',
+          path: `/project/projects/${userId}` 
+        });
+        const { body } = await restOperation.response;
+        const { data } = await body.json();
+        setProjects(data)
+        
+      } catch (e) {
+        console.log('GET call failed: ', JSON.parse(e.response.body));
       }
     }
 

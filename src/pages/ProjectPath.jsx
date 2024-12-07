@@ -127,7 +127,8 @@ const styles = {
 //React components
 import EditTable from '../components/EditTable'
   
-
+//API
+import { get, put, post } from 'aws-amplify/api';
 
 
 
@@ -576,20 +577,23 @@ export default function ProjectPath() {
       const url = glosaryTermPath
       console.log(url)
       try {
-          const response = await fetch(url);
-          const result = await response.json();
-  
-          const normalData = result.data;
-          console.log({normalData})
-          if(normalData.length > 0) {
-            if(normalData[0].rejected) setRejectReason(normalData[0].rejected)
-            if(normalData[0].idstatus === 5 ){
+
+        const restOperation = get({ 
+          apiName: 'api31a79f36',
+          path: `/procedure/glosary/${id}` 
+        });
+        const { body } = await restOperation.response;
+        const { data } = await body.json();
+          
+            if(data.length > 0) {
+            if(data[0].rejected) setRejectReason(data[0].rejected)
+            if(data[0].idstatus === 5 ){
               setGlosaryNew(false)
             }
             
           }
 
-            dispatch(updateGlosary(normalData))
+            dispatch(updateGlosary(data))
 
       } catch (error) {
           console.log(error)
@@ -652,29 +656,23 @@ export default function ProjectPath() {
       };
       const createGlosaryTerms = async () => {
 
-          const url = glosaryPath
-          const body = {
-            glosary,
-            idProject: parseInt(id),
-            userId: userId
-          }
-          console.log(body)
           try {
-        
-            const response = await fetch(url, {
-                method: "POST", 
-                headers: {
-                "Content-Type": "application/json",
-                },
-                body: JSON.stringify(body),
-                mode: 'cors'
-            
+            const bodyGlosary = {
+              glosary,
+              idProject: parseInt(id),
+              userId: userId
+            }
+            const restOperation = post({
+              apiName: 'api31a79f36',
+              path: '/procedure/glosary' ,
+              options: {
+                body: bodyGlosary
+              }
             });
-            const result = await response.json();
-    
-            console.log(result.data)
-
         
+            const { body } = await restOperation.response;
+            const {data} = await body.json();
+            
             Swal.fire({
             position: "top-end",
             icon: "success",
@@ -690,28 +688,23 @@ export default function ProjectPath() {
         }
       }
       const updateGlosaryTerms = async () => {
-
-        const url = glosaryTermPath
-        const body = {
-          glosary,
-          idProject: parseInt(id),
-          userId: userId
-        }
-        console.log(body)
+        
         try {
-      
-          const response = await fetch(url, {
-              method: "PATCH", 
-              headers: {
-              "Content-Type": "application/json",
-              },
-              body: JSON.stringify(body),
-              mode: 'cors'
-          
+          const bodyGlosary = {
+            glosary,
+            idProject: parseInt(id),
+            userId: userId
+          }
+          const restOperation = put({
+            apiName: 'api31a79f36',
+            path: `/procedure/glosary/${id}` ,
+            options: {
+              body: bodyGlosary
+            }
           });
-          const result = await response.json();
-  
-          console.log(result.data)
+      
+          const { body } = await restOperation.response;
+          const {data} = await body.json();
 
       
           Swal.fire({
@@ -729,16 +722,16 @@ export default function ProjectPath() {
       }
     }
       const getComplete = async() => {
-        const url = completePath
-        console.log(url)
+        
         try {
-            const response = await fetch(url);
-            const result = await response.json();
-    
-            const normalData = result.data;
-            console.log(normalData)
+          const restOperation = get({ 
+            apiName: 'api31a79f36',
+            path: `/helper/complete/${id}` 
+          });
+          const { body } = await restOperation.response;
+          const { data } = await body.json();
             const completeArray = [true, false, false,false, false, false,false, false, false]
-            if(normalData['glosary']) completeArray[2] = true
+            if(data['glosary']) completeArray[2] = true
             setCompleted(completeArray)
     
           
@@ -748,20 +741,20 @@ export default function ProjectPath() {
         }
       }
       const getStatus = async() => {
-        const url = statusPath
-        console.log(url)
+        
         try {
-            const response = await fetch(url);
-            const result = await response.json();
-    
-            const normalData = result.data;
-            console.log(normalData)
-            const statusArray = ['', '', '','', '', '','', '', '']
-            const {glosary} = normalData
-            if(glosary.statusname === 'En revisión') statusArray[2] = 'En revisión'
-            if(glosary.statusname === 'Rechazado') statusArray[2] = 'Rechazado'
-            console.log(statusArray)
-            setStatus(statusArray)
+          const restOperation = get({ 
+            apiName: 'api31a79f36',
+            path: `/helper/status/${id}` 
+          });
+          const { body } = await restOperation.response;
+          const { data } = await body.json();
+          const statusArray = ['', '', '','', '', '','', '', '']
+          const {glosary} = data
+          if(glosary.statusname === 'En revisión') statusArray[2] = 'En revisión'
+          if(glosary.statusname === 'Rechazado') statusArray[2] = 'Rechazado'
+          console.log(statusArray)
+          setStatus(statusArray)
     
         } catch (error) {
             console.log(error)

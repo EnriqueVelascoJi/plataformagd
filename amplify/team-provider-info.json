@@ -9,11 +9,66 @@
       "UnauthRoleName": "amplify-platformgd-dev-46ca0-unauthRole",
       "StackName": "amplify-platformgd-dev-46ca0",
       "StackId": "arn:aws:cloudformation:us-east-2:148761664853:stack/amplify-platformgd-dev-46ca0/61267d80-b105-11ef-8fdb-0a96e69a789f",
-      "AmplifyAppId": "d1oaog91uix84x"
+      "AmplifyAppId": "d1oaog91uix84x",
+      "APIGatewayAuthURL": "https://s3.amazonaws.com/amplify-platformgd-dev-46ca0-deployment/amplify-cfn-templates/api/APIGatewayAuthStack.json"
     },
     "categories": {
       "auth": {
         "platformgdf0773596": {}
+      },
+      "function": {
+        "userHandler": {
+          "deploymentBucketName": "amplify-platformgd-dev-46ca0-deployment",
+          "s3Key": "amplify-builds/userHandler-766f6a664d634a544e67-build.zip"
+        }
+      },
+      "api": {
+        "api6f03d709": {}
+      }
+    }
+  },
+  "gddev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-platformgd-gddev-487da-authRole",
+      "UnauthRoleArn": "arn:aws:iam::148761664853:role/amplify-platformgd-gddev-487da-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::148761664853:role/amplify-platformgd-gddev-487da-authRole",
+      "Region": "us-east-2",
+      "DeploymentBucketName": "amplify-platformgd-gddev-487da-deployment",
+      "UnauthRoleName": "amplify-platformgd-gddev-487da-unauthRole",
+      "StackName": "amplify-platformgd-gddev-487da",
+      "StackId": "arn:aws:cloudformation:us-east-2:148761664853:stack/amplify-platformgd-gddev-487da/34474c10-b32e-11ef-981b-02a3f434a61d",
+      "AmplifyAppId": "dg0j5djfqkhdd"
+    },
+    "categories": {
+      "auth": {
+        "platformgdf0773596": {}
+      },
+      "function": {
+        "userHandler": {
+          "deploymentBucketName": "amplify-platformgd-gddev-487da-deployment",
+          "s3Key": "amplify-builds/userHandler-562b3577557345566642-build.zip"
+        },
+        "projectHandler": {
+          "deploymentBucketName": "amplify-platformgd-gddev-487da-deployment",
+          "s3Key": "amplify-builds/projectHandler-6e47462b53464a353749-build.zip"
+        },
+        "helperHandler": {
+          "deploymentBucketName": "amplify-platformgd-gddev-487da-deployment",
+          "s3Key": "amplify-builds/helperHandler-56636b41314547796876-build.zip"
+        },
+        "proceduresHandler": {
+          "deploymentBucketName": "amplify-platformgd-gddev-487da-deployment",
+          "s3Key": "amplify-builds/proceduresHandler-504978397259646a7854-build.zip"
+        }
+      },
+      "hosting": {
+        "amplifyhosting": {
+          "appId": "dg0j5djfqkhdd",
+          "type": "manual"
+        }
+      },
+      "api": {
+        "api31a79f36": {}
       }
     }
   }

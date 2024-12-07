@@ -42,12 +42,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateProjectForm } from '../features/projectSlice';
 
 
-//Page Style
-
 //Alerts
 import Swal from 'sweetalert2'
 
+//API
+import { get, post } from 'aws-amplify/api';
 
+//Page Style
 const styles = {
     title: {
         fontWeight: '300',
@@ -559,23 +560,21 @@ export default function NewProject() {
     }
     const handleSubmit = async() => {
 
-        const url = projectPath
         const {context} = newProject
         context['userId'] = userId
+        console.log(newProject)
         try {
         
-            const response = await fetch(url, {
-                method: "POST", 
-                headers: {
-                "Content-Type": "application/json",
-                },
-                body: JSON.stringify(newProject),
-                mode: 'cors'
-            
-            });
-            const result = await response.json();
-    
-            console.log(result.data)
+            const restOperation = post({
+                apiName: 'api31a79f36',
+                path: '/project' ,
+                options: {
+                  body: newProject
+                }
+              });
+          
+              const { body } = await restOperation.response;
+              const {data} = await body.json();
 
         
             Swal.fire({
@@ -597,13 +596,14 @@ export default function NewProject() {
     }
     const getUser = async () => {
 
-        const url = userPath
         try {
-            const response = await fetch(url);
-            const result = await response.json();
-  
-            const user = result.data[0];
-            const {name, firstsurname, secondsurname, email, domain, subdomain, profile, area, } = user
+            const restOperation = get({ 
+                apiName: 'api31a79f36',
+                path: `/user/${userId}` 
+              });
+              const { body } = await restOperation.response;
+              const { data } = await body.json();
+            const {name, firstsurname, secondsurname, email, domain, subdomain, profile, area, } = data
 
             const userGlobalInformation = {
                name,
@@ -628,13 +628,14 @@ export default function NewProject() {
     }
     const getProjects = async() => {
 
-    const url = path
     try {
-        const response = await fetch(url);
-        const result = await response.json();
-
-        const normalData = result.data;
-        return normalData
+        const restOperation = get({ 
+            apiName: 'api31a79f36',
+            path: `/project/projects/${userId}` 
+          });
+          const { body } = await restOperation.response;
+          const { data } = await body.json();
+        return data
         
 
     } catch (error) {

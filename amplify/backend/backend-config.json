@@ -1,4 +1,44 @@
 {
+  "api": {
+    "api31a79f36": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "userHandler"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "projectHandler"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "helperHandler"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "proceduresHandler"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "API Gateway"
+    }
+  },
   "auth": {
     "platformgdf0773596": {
       "customAuth": false,
@@ -25,6 +65,118 @@
       },
       "providerPlugin": "awscloudformation",
       "service": "Cognito"
+    }
+  },
+  "function": {
+    "helperHandler": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "proceduresHandler": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "projectHandler": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "userHandler": {
+      "build": true,
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    }
+  },
+  "hosting": {
+    "amplifyhosting": {
+      "providerPlugin": "awscloudformation",
+      "service": "amplifyhosting",
+      "type": "manual"
+    }
+  },
+  "parameters": {
+    "AMPLIFY_function_helperHandler_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "helperHandler"
+        }
+      ]
+    },
+    "AMPLIFY_function_helperHandler_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "helperHandler"
+        }
+      ]
+    },
+    "AMPLIFY_function_proceduresHandler_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "proceduresHandler"
+        }
+      ]
+    },
+    "AMPLIFY_function_proceduresHandler_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "proceduresHandler"
+        }
+      ]
+    },
+    "AMPLIFY_function_projectHandler_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "projectHandler"
+        }
+      ]
+    },
+    "AMPLIFY_function_projectHandler_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "projectHandler"
+        }
+      ]
+    },
+    "AMPLIFY_function_userHandler_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "userHandler"
+        }
+      ]
+    },
+    "AMPLIFY_function_userHandler_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "userHandler"
+        }
+      ]
+    },
+    "AMPLIFY_hosting_amplifyhosting_appId": {
+      "usedBy": [
+        {
+          "category": "hosting",
+          "resourceName": "amplifyhosting"
+        }
+      ]
+    },
+    "AMPLIFY_hosting_amplifyhosting_type": {
+      "usedBy": [
+        {
+          "category": "hosting",
+          "resourceName": "amplifyhosting"
+        }
+      ]
     }
   }
 }

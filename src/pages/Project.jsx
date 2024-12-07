@@ -52,6 +52,9 @@ import Swal from 'sweetalert2'
 //Transitions
 import Slide from '@mui/material/Slide';
 
+//API
+import { get, put } from 'aws-amplify/api';
+
 function SlideTransition(props) {
   return <Slide {...props} direction="up" />;
 }
@@ -461,10 +464,6 @@ export default function Project() {
 
 
     //Handles
-    const handleOpen = () => {
-      setOpen(true)
-    }
-    
     const handleChangeParticipants = (keyObject, fieldObject, fieldValue) => {
 
         const id = parseInt(keyObject.split('[')[1].substring(0, keyObject.length - 1))
@@ -575,25 +574,42 @@ export default function Project() {
         setNewProject({...newProjectAux})
 
     }
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+    
+        setOpen(false);
+    };
+    
+    const hideReject = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+          }
+      
+        setRejectOpen(false)
+    }
+    const viewReject = () => {
+        setRejectOpen(true)
+    }
     const handleSubmit = async() => {
 
-        const url = projectPath
         const {context} = newProject
         context['userId'] = userId
         try {
         
-            const response = await fetch(url, {
-                method: "PATCH", 
-                headers: {
-                "Content-Type": "application/json",
-                },
-                body: JSON.stringify(newProject),
-                mode: 'cors'
-            
-            });
-            const result = await response.json();
+            const restOperation = put({
+                apiName: 'api31a79f36',
+                path: `/project/${id}` ,
+                options: {
+                  body: newProject
+                }
+              });
+          
+              const { body } = await restOperation.response;
+              const {data} = await body.json();
     
-            console.log(result.data)
+            console.log(data)
 
         
             Swal.fire({
@@ -611,105 +627,18 @@ export default function Project() {
             console.log(error)
         }
     }
-    const getUser = async () => {
-
-        const url = userPath
-        try {
-            const response = await fetch(url);
-            const result = await response.json();
-  
-            const user = result.data[0];
-            const {name, firstsurname, secondsurname, email, domain, subdomain, profile, area, } = user
-
-            const userGlobalInformation = {
-               name,
-               firstSurname: firstsurname,
-               secondSurname: secondsurname, 
-               email,
-               domain,
-               subdomain, 
-               profile,
-               area
-           }
-           console.log(userGlobalInformation)
-           setSubdomains(domains[subdomain].subdomains)
-           setNewProject({
-               ...newProject,
-               personalInformation: userGlobalInformation
-           })
-  
-        } catch (error) {
-            console.log(error)
-        }
-    }
-    const getProjects = async() => {
-
-    const url = path
-    try {
-        const response = await fetch(url);
-        const result = await response.json();
-
-        const normalData = result.data;
-        return normalData
-        
-
-    } catch (error) {
-        console.log(error)
-    }
-    }
-  
-    const chargeProjectInformation = async() => {
-        const projects = await getProjects()
-        const project = projects.filter(project => project.idproject === projectId)
-
-        console.log(project, 'projectttt')
-
-        const {name, firstsurname, secondsurname, email, domain,subdomain,area, profile, projectname,
-            projecttype,
-            projectdescription,
-            projectscopedescription,
-            projectobjective,
-            region,startdate, finaldate} = project[0]
-
-        const existingProject = {
-             personalInformation: {
-                 name,
-                 firstSurname: firstsurname,
-                 secondSurname: secondsurname,
-                 email,
-                 domain,
-                 subdomain,
-                 area,
-                 profile 
-             },
-             context: {
-                projectName: projectname,
-                projectType: projecttype,
-                projectDescription: projectdescription,
-                projectScopeDescription: projectscopedescription,
-                projectObjective: projectobjective,
-                region: region,
-                startDate: dayjs(startdate),
-                finalDate: dayjs(finaldate)
-             }
-        }
-        console.log(existingProject)
-        setNewProject(existingProject)
-    }
-
-
     const getProject = async() => {
 
-        const url = projectPath
-        console.log(url)
         try {
-            const response = await fetch(url);
-            const result = await response.json();
+            const restOperation = get({ 
+                apiName: 'api31a79f36',
+                path: `/project/${id}` 
+              });
+              const { body } = await restOperation.response;
+              const { data } = await body.json();
     
-            const normalData = result.data;
-            console.log({normalData})
     
-            const {projectInformation, participants} = normalData
+            const {projectInformation, participants} = data
             const informationArray = projectInformation[0] 
             const participantsArray = participants.map(participant => ({
                 idParticipant: participant.id,
@@ -764,23 +693,7 @@ export default function Project() {
             console.log(error)
         }
         }
-    const handleClose = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-    
-        setOpen(false);
-    };
-    const viewReject = () => {
-        setRejectOpen(true)
-    }
-    const hideReject = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-          }
-      
-        setRejectOpen(false)
-    }
+   
     
     useEffect(() => {
     setOpen(true)

@@ -45,6 +45,9 @@ import { createPassword} from '../helpers/helpers.js'
 import { handleSignUp } from '../auth/auth';
 
 
+//API
+import { post, put } from 'aws-amplify/api';
+
 //Page Style
 const styles = {
     title: {
@@ -354,6 +357,7 @@ const profiles = [
 
 
 
+
 export default function UserForm({isNew}) {
 
   //Local variables
@@ -416,6 +420,25 @@ export default function UserForm({isNew}) {
     // }
     // navigate(0)
     // }
+    const addUser = async() => {
+      try {
+        const restOperation = post({
+          apiName: 'api31a79f36',
+          path: '/user',
+          options: {
+            body: user
+          }
+        });
+    
+        const { body } = await restOperation.response;
+        const {data} = await body.json();
+        console.log(response)
+
+
+      } catch (e) {
+        console.log('POST call failed: ', e);
+      }
+    }
     const newUser = async () => {
 
       const url = path
@@ -428,8 +451,24 @@ export default function UserForm({isNew}) {
       const response = await handleSignUp(body)
       console.log(response)
     }
-    const editUser = () => {
+    const editUser = async () => {
+      try {
+        const restOperation = put({
+          apiName: 'api31a79f36',
+          path: `/user/${id}`,
+          options: {
+            body: user
+          }
+        });
+    
+        const { body } = await restOperation.response;
+        const {data} = await body.json();
+        console.log(response)
 
+
+      } catch (e) {
+        console.log('PUT call failed: ', e);
+      }
     }
 
   return (
@@ -564,7 +603,7 @@ export default function UserForm({isNew}) {
           </FormGroup>        
         <Grid item size={{md: 6}}>
         </Grid>
-          <Button variant="contained" sx={{ textTransform: 'none', width: '25%', backgroundColor: '#432851'}} onClick={isNew ? newUser: editUser}>{isNew ? 'Registrar' : 'Editar'}</Button>
+          <Button variant="contained" sx={{ textTransform: 'none', width: '25%', backgroundColor: '#432851'}} onClick={isNew ? addUser: editUser}>{isNew ? 'Registrar' : 'Editar'}</Button>
         <Grid item size={{md: 6}}>
           
         </Grid>

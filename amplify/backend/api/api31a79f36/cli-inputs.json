@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "paths": {
+    "/user": {
+      "name": "/user",
+      "lambdaFunction": "userHandler",
+      "permissions": {
+        "setting": "open"
+      }
+    },
+    "/project": {
+      "name": "/project",
+      "lambdaFunction": "projectHandler",
+      "permissions": {
+        "setting": "open"
+      }
+    },
+    "/helper": {
+      "name": "/helper",
+      "lambdaFunction": "helperHandler",
+      "permissions": {
+        "setting": "open"
+      }
+    },
+    "/procedure": {
+      "name": "/procedure",
+      "lambdaFunction": "proceduresHandler",
+      "permissions": {
+        "setting": "open"
+      }
+    }
+  }
+}

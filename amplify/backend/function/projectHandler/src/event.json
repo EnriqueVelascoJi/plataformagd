@@ -1,0 +1,11 @@
+{
+  "httpMethod": "GET",
+  "path": "/project/projects/18",
+  "queryStringParameters": {
+    "limit": "10"
+  },
+  "headers": {
+    "Content-Type": "application/json"
+  },
+  "body": "{\"msg\":\"Hello from the event.json body\"}"
+}
